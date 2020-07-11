@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
+import create_index as es
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -47,6 +49,8 @@ class Video(Resource):
         video = VideoModel(name=args['name'], views=args['views'], likes=args['likes'])
         db.session.add(video)
         db.session.commit()
+
+        es.store_record(args)
         return video, 201
 
     @marshal_with(resource_field)
