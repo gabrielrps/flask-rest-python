@@ -61,6 +61,11 @@ def search(es_object, search):
     res = es_object.search(index="videos", body=search)
     print(res)
 
+#res = es.get(index="videos", id='sEKbPnMB89eVZvljTlm-')
+#print(res['_source'])
 
-search_object = {'query': {'match': {'views': 123}}}
-search(es, json.dumps(search_object))
+
+res = es.search(index="videos", body={"query": {"match_all": {}}})
+print("Got %d Hits:" % res['hits']['total']['value'])
+for hit in res['hits']['hits']:
+    print(hit["_id"], (" : %(name)s %(views)i %(likes)i" % hit["_source"]))
